@@ -28,6 +28,10 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public Long getUserIdFromToken(String token) {
+        return getTokenClaim(token, "id", Long.class);
+    }
+
     public int getTokenId(String token) {
         return getTokenClaim(token, "id", Integer.class);
     }

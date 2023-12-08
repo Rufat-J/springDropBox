@@ -59,8 +59,12 @@ public class UserService {
         throw new InvalidLoginException("Login failed, incorrect username or password");
     }
 
-    private User findUserByUsername(String username) {
+    public User getUserByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         return user.orElse(null);
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElse(null);
     }
 }
