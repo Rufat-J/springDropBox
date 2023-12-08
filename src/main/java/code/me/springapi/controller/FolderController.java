@@ -47,7 +47,6 @@ public class FolderController {
     @GetMapping("/{userId}")
     public ResponseEntity<List<Folder>> getUserFolders(@PathVariable Long userId, @RequestHeader("Authorization") String token) {
         try {
-            User user = userService.getUserById(userId);
             List<Folder> folders = folderService.getUserFolders(userId);
             return ResponseEntity.ok(folders);
         } catch (Exception e) {
