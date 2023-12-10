@@ -8,10 +8,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class FileDTO {
-    private Long id;
-    private String name;
-    private String contentType; // MIME type (e.g., "image/jpeg", "application/pdf")
-    private long size; // file size in bytes
-    private LocalDateTime uploadDate; // when the file was uploaded
-    private String imageUrl; // endpoint or URL for the image
+
+    private Long id;               // Unique identifier for the file
+    private String name;           // Name of the file
+    private String contentType;    // Content type of the file (e.g., "image/jpeg")
+    private long size;             // Size of the file in bytes
+    private LocalDateTime uploadDate; // Date and time when the file was uploaded
+    private String imageUrl;       // URL to access the file, if applicable
+
 }

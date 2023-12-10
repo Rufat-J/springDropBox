@@ -25,6 +25,14 @@ public class UserService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    /**
+     * Registers a new user.
+     *
+     * @param username Username for the new user.
+     * @param password Password for the new user.
+     * @return RegisterSuccess object with a success message.
+     * @throws RegistrationFailureException If the registration fails.
+     */
     public RegisterSuccess register(String username, String password) throws RegistrationFailureException {
         if (userRepository.existsByUsername(username)) {
             throw new RegistrationFailureException("Registration failed: Username already exists");
@@ -44,6 +52,14 @@ public class UserService {
         }
     }
 
+    /**
+     * Performs user login.
+     *
+     * @param username Username for login.
+     * @param password Password for login.
+     * @return LoginSuccess object with a success message and generated token.
+     * @throws InvalidLoginException If the login fails.
+     */
     public LoginSuccess login(String username, String password) throws InvalidLoginException {
         Optional<User> optionalUser = userRepository.findByUsername(username);
 
@@ -59,11 +75,23 @@ public class UserService {
         throw new InvalidLoginException("Login failed, incorrect username or password");
     }
 
+    /**
+     * Retrieves a user by username.
+     *
+     * @param username Username of the user to be retrieved.
+     * @return The retrieved user or null if not found.
+     */
     public User getUserByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         return user.orElse(null);
     }
 
+    /**
+     * Retrieves a user by ID.
+     *
+     * @param userId ID of the user to be retrieved.
+     * @return The retrieved user or null if not found.
+     */
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElse(null);
     }

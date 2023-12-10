@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/folders")
 public class FolderController {
-
     private final FolderService folderService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
@@ -30,14 +29,26 @@ public class FolderController {
         this.userService = userService;
     }
 
+    /**
+     * Handles the creation of a new folder.
+     *
+     * @param token Authorization token containing user information.
+     * @param folderName The name of the folder to be created.
+     * @return ResponseEntity containing a success message and the ID of the created folder.
+     *
+     */
     @PostMapping("/create")
     public ResponseEntity<Map<String, String>> createFolder(
             @RequestHeader("Authorization") String token,
             @RequestParam String folderName) {
         try {
+            // Extract user ID from JWT token
             Long userId = extractUserIdFromToken(token);
+
+            // Create a new folder
             Folder folder = folderService.createFolder(userId, folderName);
 
+            // Prepare response
             Map<String, String> response = new HashMap<>();
             response.put("message", "Folder created successfully with ID: " + folder.getId());
             return ResponseEntity.ok(response);
@@ -47,10 +58,20 @@ public class FolderController {
         }
     }
 
+    /**
+     * Retrieves a list of folder DTOs for a specific user.
+     *
+     * @param userId User ID for whom folders are retrieved.
+     * @param token   Authorization token containing user information.
+     * @return ResponseEntity containing a list of FolderDTOs.
+     */
     @GetMapping("/{userId}")
     public ResponseEntity<List<FolderDTO>> getUserFolders(@PathVariable Long userId, @RequestHeader("Authorization") String token) {
         try {
+            // Get folders for the specified user
             List<Folder> folders = folderService.getUserFolders(userId);
+
+            // Convert folders to FolderDTOs for response
             List<FolderDTO> folderDTOs = folders.stream()
                     .map(folder -> {
                         FolderDTO folderDTO = new FolderDTO();
@@ -61,6 +82,7 @@ public class FolderController {
                         return folderDTO;
                     })
                     .collect(Collectors.toList());
+
             return ResponseEntity.ok(folderDTOs);
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,6 +90,7 @@ public class FolderController {
         }
     }
 
+    // Helper method to extract user ID from JWT token
     private Long extractUserIdFromToken(String token) {
         return jwtTokenProvider.getUserIdFromToken(token);
     }

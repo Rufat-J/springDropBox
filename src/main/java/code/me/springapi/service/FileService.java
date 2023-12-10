@@ -1,6 +1,5 @@
 package code.me.springapi.service;
 
-
 import code.me.springapi.dto.FileDTO;
 import code.me.springapi.exception.FileNotFoundException;
 import code.me.springapi.exception.FileStorageException;
@@ -15,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +33,15 @@ public class FileService {
         this.folderService = folderService;
     }
 
+    /**
+     * Stores an image file in the specified folder.
+     *
+     * @param file      The image file to be stored.
+     * @param folderId  ID of the folder where the file will be stored.
+     * @return          The stored file entity.
+     * @throws IllegalArgumentException  If the file is not an image.
+     * @throws FileStorageException      If there is an issue storing the file.
+     */
     @Transactional
     public MyFile storeImage(MultipartFile file, Long folderId) {
         // Validate and handle only image files
@@ -58,6 +65,12 @@ public class FileService {
         }
     }
 
+    /**
+     * Converts a MyFile entity to a FileDTO.
+     *
+     * @param myFile    The MyFile entity to be converted.
+     * @return          The corresponding FileDTO.
+     */
     public FileDTO convertToFileDTO(MyFile myFile) {
         FileDTO fileDTO = new FileDTO();
         fileDTO.setId(myFile.getId());
@@ -65,21 +78,30 @@ public class FileService {
         fileDTO.setContentType(myFile.getContentType());
         fileDTO.setSize(myFile.getContent().length);
         fileDTO.setUploadDate(myFile.getUploadDate());
-
-        // Assuming you have an endpoint for serving images, update this accordingly
-        fileDTO.setImageUrl("/files/" + myFile.getId()); // Replace with your actual endpoint
+        fileDTO.setImageUrl("/files/" + myFile.getId());
 
         return fileDTO;
     }
 
-
-
+    /**
+     * Retrieves a file by its ID.
+     *
+     * @param fileId    The ID of the file to be retrieved.
+     * @return          The retrieved file entity.
+     * @throws FileNotFoundException    If the file with the specified ID is not found.
+     */
     public MyFile getFile(Long fileId) {
         return fileRepository.findById(fileId)
                 .orElseThrow(() -> new FileNotFoundException("File not found with id " + fileId));
     }
 
-
+    /**
+     * Retrieves a list of files within a specific folder.
+     *
+     * @param folderId  The ID of the folder to retrieve files from.
+     * @return          The list of files in the specified folder.
+     * @throws RuntimeException    If the folder with the specified ID is not found.
+     */
     public List<MyFile> getFilesInFolder(Long folderId) {
         Optional<Folder> optionalFolder = folderRepository.findById(folderId);
         Folder folder = optionalFolder.orElseThrow(() -> new RuntimeException("Folder not found"));

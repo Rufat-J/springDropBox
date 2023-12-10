@@ -13,9 +13,18 @@ import java.security.Key;
 @NoArgsConstructor
 public class JwtTokenProvider {
 
-    private final String secret = "keyboardcat-testwerwerwerwerwererwwerwerwerwetgwegwegwegwerwerwerwerwerwerwerwerw234234234wefr2342f234";
+    // The secret key used for signing the JWT
+    private final String secret = "keyboardcat-testwerwerwerwerwererwwerwerwerwetgwegwegwegwerwerwerwerwerwerwerwerwerw234234234wefr2342f234";
+
+    // The key object derived from the secret
     private final Key key = Keys.hmacShaKeyFor(secret.getBytes());
 
+    /**
+     * Generates a JWT token for the provided user.
+     *
+     * @param user The user for whom the token is generated.
+     * @return The generated JWT token.
+     */
     public String generateToken(User user) {
         long id = user.getId();
         String username = user.getUsername();
@@ -28,14 +37,24 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    /**
+     * Extracts the user ID from the provided JWT token.
+     *
+     * @param token The JWT token.
+     * @return The user ID extracted from the token.
+     */
     public Long getUserIdFromToken(String token) {
         return getTokenClaim(token, "id", Long.class);
     }
 
-    public int getTokenId(String token) {
-        return getTokenClaim(token, "id", Integer.class);
-    }
-
+    /**
+     * Extracts a specific claim from the JWT token.
+     *
+     * @param token      The JWT token.
+     * @param type       The type of the claim.
+     * @param returnType The expected return type of the claim.
+     * @return The extracted claim value.
+     */
     public <T> T getTokenClaim(String token, String type, Class<T> returnType) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -45,6 +64,12 @@ public class JwtTokenProvider {
         return claims.get(type, returnType);
     }
 
+    /**
+     * Validates the provided JWT token.
+     *
+     * @param token The JWT token to be validated.
+     * @return True if the token is valid, false otherwise.
+     */
     public boolean validate(String token) {
         try {
             Jwts.parserBuilder()

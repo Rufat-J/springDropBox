@@ -1,13 +1,10 @@
-package code.me.springapi.model;// Import necessary classes
-import code.me.springapi.model.Folder;
+package code.me.springapi.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-
-// Add annotations
 @Entity
 @Table(name = "files")
 @Getter
@@ -24,12 +21,12 @@ public class MyFile {
     // Content type for image files (e.g., "image/jpeg", "image/png")
     private String contentType;
 
-    // Innehållet i filen som bytes
+    // File content in byte
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] content;
 
-    // Mapp som filen tillhör
+    // Folder that belongs to file
     @ManyToOne
     @JoinColumn(name = "folder_id")
     private Folder folder;
