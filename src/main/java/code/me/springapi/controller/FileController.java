@@ -25,6 +25,13 @@ public class FileController {
         this.fileService = fileService;
     }
 
+    /**
+     * Handles file upload to a specific folder.
+     *
+     * @param folderId ID of the folder where the file will be uploaded.
+     * @param file     The file to be uploaded.
+     * @return ResponseEntity containing a success message and the ID of the uploaded file.
+     */
     @PostMapping("/upload/{folderId}")
     public ResponseEntity<Map<String, String>> uploadFile(
             @PathVariable Long folderId,
@@ -42,6 +49,12 @@ public class FileController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Handles file download by providing the file's content.
+     *
+     * @param fileId ID of the file to be downloaded.
+     * @return ResponseEntity containing the file content and appropriate content type.
+     */
     @GetMapping("/{fileId}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileId) {
         MyFile file = fileService.getFile(fileId);
@@ -51,6 +64,12 @@ public class FileController {
                 .body(file.getContent());
     }
 
+    /**
+     * Retrieves a list of file DTOs within a specific folder.
+     *
+     * @param folderId ID of the folder to retrieve files from.
+     * @return ResponseEntity containing a list of FileDTOs.
+     */
     @GetMapping("/folder/{folderId}")
     public ResponseEntity<List<FileDTO>> getFilesInFolder(@PathVariable Long folderId) {
         List<MyFile> files = fileService.getFilesInFolder(folderId);
