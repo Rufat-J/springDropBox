@@ -30,7 +30,7 @@ public class Folder {
     private User user;
 
     // Filer i mappen
-    @OneToMany(mappedBy = "folder")
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MyFile> files = new ArrayList<>();
 }
 

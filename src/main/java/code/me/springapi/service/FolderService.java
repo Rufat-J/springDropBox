@@ -5,12 +5,14 @@ import code.me.springapi.model.Folder;
 import code.me.springapi.model.User;
 import code.me.springapi.repository.FolderRepository;
 import code.me.springapi.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class FolderService {
 
     private final FolderRepository folderRepository;
@@ -35,6 +37,11 @@ public class FolderService {
         folderRepository.save(folder);
 
         return folder;
+    }
+
+    public Folder getFolderById(Long folderId) {
+        return folderRepository.findById(folderId)
+                .orElse(null); // You can modify this to throw an exception if the folder is not found
     }
 
     public List<Folder> getUserFolders(Long userId) {

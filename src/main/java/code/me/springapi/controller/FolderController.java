@@ -1,5 +1,6 @@
 package code.me.springapi.controller;
 
+import code.me.springapi.dto.FolderDTO;
 import code.me.springapi.model.Folder;
 import code.me.springapi.model.User;
 import code.me.springapi.security.JwtTokenProvider;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/folders")
 public class FolderController {
@@ -45,10 +48,20 @@ public class FolderController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Folder>> getUserFolders(@PathVariable Long userId, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<FolderDTO>> getUserFolders(@PathVariable Long userId, @RequestHeader("Authorization") String token) {
         try {
             List<Folder> folders = folderService.getUserFolders(userId);
-            return ResponseEntity.ok(folders);
+            List<FolderDTO> folderDTOs = folders.stream()
+                    .map(folder -> {
+                        FolderDTO folderDTO = new FolderDTO();
+                        folderDTO.setId(folder.getId());
+                        folderDTO.setName(folder.getName());
+                        folderDTO.setUser(folder.getUser());
+                        // Map other fields or use nested DTOs as needed
+                        return folderDTO;
+                    })
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(folderDTOs);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
